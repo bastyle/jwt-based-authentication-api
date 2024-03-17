@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const cors = require("cors")
 const userRoutes = require("./routes/userRoutes");
 const auth = require('./middleware/auth')
+const adminValidation = require('./middleware/adminValidation')
 
 const corsOptions = {
   origin: '*',
@@ -25,6 +26,11 @@ app.get('/api/health', (req, res) => {
 app.get('/api/health/secured',auth, (req, res) => {
   console.log('Sec Health check...');
   res.send('OK! Secured!');
+});
+
+app.get('/api/health/admin/secured',auth, adminValidation, (req, res) => {
+  console.log('Sec admin Health check...');
+  res.send('OK! Admin Secured access!');
 });
 
 // MongoDB connection
