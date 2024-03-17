@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "40fe6f02-28c3-4923-8806-4da702d9aa97",
+		"name": "comp308-assignment-3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7215557"
+	},
+	"item": [
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/health",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health-secured",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							" url: pm.environment.get(\"tokenurl\") ,\r",
+							" method: 'POST',\r",
+							" header: {\r",
+							"    'Content-Type': 'application/json'\r",
+							" },\r",
+							"body: {\r",
+							"   mode: 'raw',\r",
+							"   raw: JSON.stringify({ \"username\": pm.environment.get(\"username\"), \"password\" : pm.environment.get(\"password\")})\r",
+							"}\r",
+							"}, function (err, res) {\r",
+							"    console.log(res.json().token)\r",
+							"    pm.environment.set(\"token\", res.json().token);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/health/secured",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"health",
+						"secured"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health-admin-secured",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							" url: pm.environment.get(\"tokenurl\") ,\r",
+							" method: 'POST',\r",
+							" header: {\r",
+							"    'Content-Type': 'application/json'\r",
+							" },\r",
+							"body: {\r",
+							"   mode: 'raw',\r",
+							"   raw: JSON.stringify({ \"username\": pm.environment.get(\"username\"), \"password\" : pm.environment.get(\"password\")})\r",
+							"}\r",
+							"}, function (err, res) {\r",
+							"    console.log(res.json().token)\r",
+							"    pm.environment.set(\"token\", res.json().token);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/health/admin/secured",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"health",
+						"admin",
+						"secured"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"adminUser\",\r\n    \"password\": \"examplePassword\",\r\n    \"email\":\"adminUser@example.cl\",\r\n    \"firstName\": \"firstName\",\r\n    \"lastName\":\"lastName\",\r\n    \"roleId\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/signUp",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"signUp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"studentUser4\",\r\n    \"password\": \"examplePassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAdminPortal",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							" url: pm.environment.get(\"tokenurl\") ,\r",
+							" method: 'POST',\r",
+							" header: {\r",
+							"    'Content-Type': 'application/json'\r",
+							" },\r",
+							"body: {\r",
+							"   mode: 'raw',\r",
+							"   raw: JSON.stringify({ \"username\": pm.environment.get(\"username\"), \"password\" : pm.environment.get(\"password\")})\r",
+							"}\r",
+							"}, function (err, res) {\r",
+							"    //console.log(res.json().token)\r",
+							"    console.log(res.cookies.get('token'));\r",
+							"    pm.environment.set(\"token\", pm.cookies.get('token'));    \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MThmYzk0Mi03NzZmLTQ1YmMtYTQxMS0xNmNiNTk2ODExMWIiLCJwcm9maWxlIjoic3R1ZGVudCIsImlhdCI6MTcxMDY5OTg5OSwiZXhwIjoxNzEwNzAzNDk5fQ.wK2Gh9NXjo3mrgnOEMoLUR5ffHsVE7L197grvs9AFms",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/adminPortal",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"adminPortal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStudentData",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3MThmYzk0Mi03NzZmLTQ1YmMtYTQxMS0xNmNiNTk2ODExMWIiLCJwcm9maWxlIjoic3R1ZGVudCIsImlhdCI6MTcxMDY5OTg5OSwiZXhwIjoxNzEwNzAzNDk5fQ.wK2Gh9NXjo3mrgnOEMoLUR5ffHsVE7L197grvs9AFms",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/studentData",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"studentData"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

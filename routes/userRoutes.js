@@ -4,7 +4,6 @@ const {
   signUp,
   deleteUser,
   getAllUsers,
-  getUserById,
   login,
   getAdminData,
   getStudentData,
