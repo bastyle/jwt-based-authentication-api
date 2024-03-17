@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
+const { validationResult } = require('express-validator');
 require('dotenv').config();
 
 
@@ -8,10 +9,18 @@ require('dotenv').config();
 module.exports.signUp = async (req, res) => {
     try {
         console.log('adding user...');
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const user = await userModel.create(req.body);
         console.log('User created:', user);
         res.status(201).json(user);
     } catch (error) {
+        console.error('Failed to create user:', error);
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Duplicate key error '+JSON.stringify(error.keyValue) });
+        }
         res.status(500).json({ error: 'Failed to create user:' + error });
     }
 }
