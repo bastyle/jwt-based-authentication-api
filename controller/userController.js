@@ -11,13 +11,17 @@ module.exports.signUp = async (req, res) => {
         console.log('adding user...');
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            const errorMessages = errors.array().map(error => {
+                return {
+                    field: error.path,
+                    message: error.msg
+                };
+            });
+            return res.status(400).json({ errors: errorMessages });
         }
         const user = await userModel.create(req.body);
-        //console.log('User created:', user);
         const userWithoutPassword = user.toObject();
         delete userWithoutPassword.password;
-        //console.log('User without password:', userWithoutPassword);
         res.status(201).json(userWithoutPassword);
     } catch (error) {
         if (error.code === 11000) {
