@@ -56,19 +56,6 @@ module.exports.getAllUsers = async (req, res) => {
     }
 }
 
-// Get user by ID
-module.exports.getUserById = async (req, res) => {
-    try {
-        const user = await userModel.findById(req.params.id);
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user' });
-    }
-}
 module.exports.login = async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -92,3 +79,42 @@ module.exports.login = async (req, res) => {
       res.status(500).json({ message: 'Error logging in' });
     }
   }
+
+
+  module.exports.getAdminData = async (req, res) => {
+    try {
+        console.log('fetching admin data...')
+        const adminInfo = {
+            name: "Admin",
+            role: "Administrator",
+            email: "admin@example.com",
+            privilegedInfo: {
+                totalUsers: 100, 
+                totalRevenue: 10000,
+                serverStatus: "Running", 
+                activeUsers: 50,                 
+            }
+        };
+        console.log('adminInfo::', adminInfo);
+
+        res.json(adminInfo);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch user....' });
+    }
+}
+
+module.exports.getStudentData = async (req, res) => {
+    try {
+        console.log('fetching student data...')
+        const studentsSummary = {
+            totalStudents: 156, 
+            averageGPA: 3.5,
+            mostPopularMajor: "Computer Science",
+        };
+        console.log('studentsSummary::', studentsSummary);
+        res.json(studentsSummary);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to studentInfo!' });
+    }
+}
+  

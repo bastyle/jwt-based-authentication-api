@@ -6,8 +6,12 @@ const {
   getAllUsers,
   getUserById,
   login,
+  getAdminData,
+  getStudentData,
 } = require("../controller/userController");
 const { STUDENT, ADMIN } = require('../models/roleEnum');
+const auth = require('../middleware/auth');
+const adminValidation = require('../middleware/adminValidation');
 
 const router = require("express").Router();
 
@@ -21,11 +25,12 @@ router.post("/signUp", [
     return true;
 })
 ], signUp);
-
 router.post("/login", login);
-
-router.delete("/:id", deleteUser);
 router.get("/", getAllUsers);
-router.get("/:id", getUserById);
+router.delete("/:id", deleteUser);
+
+//
+router.get("/adminPortal", auth, adminValidation, getAdminData);
+router.get("/studentData", auth, getStudentData);
 
 module.exports = router;
