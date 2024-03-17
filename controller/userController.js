@@ -74,13 +74,19 @@ module.exports.login = async (req, res) => {
       const { username, password } = req.body;
       console.log('logging in...'+ username, password)
       const user = await userModel.findOne({ username });
+
+      if(!user){
+        return res.status(404).json({ message: 'User not found!' });
+      }
   
       if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
   
-      const token = jwt.sign({ userId: user._id, profile: user.roleId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({ token });
+      const token = jwt.sign({ userId: user.userId, profile: user.roleId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.cookie('token', token, { maxAge: 3600000, httpOnly: true });
+      //res.json({ token });
+      res.status(201).json({user: user.userId})
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Error logging in' });
