@@ -14,10 +14,12 @@ module.exports.signUp = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
         const user = await userModel.create(req.body);
-        console.log('User created:', user);
-        res.status(201).json(user);
+        //console.log('User created:', user);
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+        //console.log('User without password:', userWithoutPassword);
+        res.status(201).json(userWithoutPassword);
     } catch (error) {
-        console.error('Failed to create user:', error);
         if (error.code === 11000) {
             return res.status(400).json({ error: 'Duplicate key error '+JSON.stringify(error.keyValue) });
         }
